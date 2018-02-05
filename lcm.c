@@ -2,7 +2,7 @@
 #include<stdlib.h>
 
 
-
+//GCD method for calculating the lcm
 int gcd(int a, int b) {
 
 	int d;
@@ -17,11 +17,10 @@ int gcd(int a, int b) {
 	return d;
 }
 
-
 void main() {
 
 	int A, B, C, lcm;
-	//Does not work when numbers are both in hundred millions
+	//Does not work when numbers are both in hundred millions the program gave me a negative number
         printf("Enter the first number: ");
         scanf("%d", &A);
         printf("Enter the second number: ");
