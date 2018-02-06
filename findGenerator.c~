@@ -2,7 +2,6 @@
 #include<stdlib.h>
 #include<math.h>
 
-
 void main() {
 
 	int A, p, g, redFlag;
@@ -29,6 +28,6 @@ void main() {
 			break;
 		}
 	}
-	//I did not make a provision for the input being a non prime number that will definitely make it break.
+	//I did not make a provision for the input being a non prime number that will definitely make it mess up.
 	printf("%d is a generator of Z_%d.\n",g,A);
 }
