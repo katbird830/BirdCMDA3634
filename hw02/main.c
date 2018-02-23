@@ -10,17 +10,20 @@ int main (int argc, char **argv) {
 	//seed value for the randomizer 
   double seed;
   
-  seed = clock(); //this will make your program run differently everytime
-  //seed = 0; //uncomment this and you program will behave the same everytime it's run
+ // seed = clock(); //this will make your program run differently everytime
+  seed = 0; //uncomment this and you program will behave the same everytime it's run
   
   srand48(seed);
 
+	//testing modProd function
+	unsigned int c = modprod(13, 74, 111);
+	printf("The result is %u.\n", c);
 
   //begin by getting user's input
 	unsigned int n;
 
-  printf("Enter a number of bits: ");
-  scanf("%u",&n);
+  //printf("Enter a number of bits: ");
+  //scanf("%u",&n);
 
   //make sure the input makes sense
   if ((n<2)||(n>30)) {
