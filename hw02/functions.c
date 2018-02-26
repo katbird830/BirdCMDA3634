@@ -4,7 +4,6 @@
 
 #include "functions.h"
 
-int MASK = 0x80000000;
 
 //compute a*b mod p safely
 unsigned int modProd(unsigned int a, unsigned int b, unsigned int p) {
@@ -34,7 +33,7 @@ unsigned int modExp(unsigned int a, unsigned int b, unsigned int p) {
 	for(int i = 0; i<n; i++) {
 
 		if((b & (1 << i)) > 0) {
-			aExpb = modProd(aExpb, z, p)
+			aExpb = modProd(aExpb, z, p);
 		}
 		z = modProd(z, z, p);
 	}
@@ -114,7 +113,7 @@ unsigned int isProbablyPrime(unsigned int N) {
 			if (x == 1) {
 				return 0;
 			}
-			if (X == N-1) {
+			if (x == N-1) {
 				continue;
 			}
 		}
@@ -127,7 +126,20 @@ unsigned int isProbablyPrime(unsigned int N) {
 unsigned int findGenerator(unsigned int p) {
   /* Q3.3: complete this function and use the fact that p=2*q+1 to quickly find a generator */
 	unsigned int q = (p-1)/2;
+	int redFlag = 0;
+	unsigned int c = 2;
+	unsigned int k;
 
+	for (unsigned int l = 1; l < p-1; l++) {
+		redFlag = 0;
+		k = pow(c, l);
+		if (k % p == 1) {
+			redFlag = 1;
+			break;
+		}
+	}
 	
-	
+	if (redFlag == 0) {
+		return c;
+	}
 }
