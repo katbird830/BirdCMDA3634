@@ -61,10 +61,21 @@ int main (int argc, char **argv) {
 	printf("g = %u is a generator of Z_%u \n", g, p1);  
 
 	/*Extra credit stuff*/
-	//unsigned int x = (rand()%p);
-	//unsigned int h = pow(g, x)%p;
+	unsigned int x = (rand()%p);
+	unsigned int h = (int)pow(g, x)%p;
 
+	unsigned int x1, g1;
 	
+	for (int i = 0; i < p; i++) {
+
+		g1 = (int)pow(g,i)%p;
+
+		if (h == g1) {
+			x1 = i;
+			break;
+		}
+	}
+	printf("A possible secret key x for h = %u and g = %u is x = %u.\n", h, g, x1);
 
 	return 0;
 }
