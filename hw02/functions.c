@@ -105,9 +105,15 @@ unsigned int isProbablyPrime(unsigned int N) {
 		r++;
 	}
 	
+<<<<<<< HEAD
 	unsigned int a = (rand()%(N-3))+2;
 
 	 for (unsigned int n=0; n<NsmallPrimes; n++) {
+=======
+	unsigned int a = rand()%(N-3)+2;
+
+	 for (unsigned int n=0;n<NsmallPrimes;n++) {
+>>>>>>> cace1564d1ee044eb863d61f7a0e64f52d6bc569
 		unsigned int x = modExp(a, d, N);
 		if (x == 1 || x == N-1) {
 			continue;
@@ -131,6 +137,7 @@ unsigned int isProbablyPrime(unsigned int N) {
 unsigned int findGenerator(unsigned int p) {
   /* Q3.3: complete this function and use the fact that p=2*q+1 to quickly find a generator */
 	unsigned int q = (p-1)/2;
+<<<<<<< HEAD
 	unsigned int k, c, m, g;
 	c = 2;
 
@@ -144,4 +151,22 @@ unsigned int findGenerator(unsigned int p) {
 		}
 	}
 	return g;
+=======
+	int redFlag = 0;
+	unsigned int c = 2;
+	unsigned int k;
+
+	for (unsigned int l = 1; l < p-1; l++) {
+		redFlag = 0;
+		k = pow(c, l);
+		if (k % p == 1) {
+			redFlag = 1;
+			break;
+		}
+	}
+	
+	if (redFlag == 0) {
+		return c;
+	}
+>>>>>>> cace1564d1ee044eb863d61f7a0e64f52d6bc569
 }
