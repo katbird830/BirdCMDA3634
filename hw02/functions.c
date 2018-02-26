@@ -13,7 +13,7 @@ unsigned int modProd(unsigned int a, unsigned int b, unsigned int p) {
 	int n = 32;
 	
 	for(int i=0; i<n; i++) {
-
+		//got a tip 
 		if((b & (1 << i)) > 0) {
 			ab = (ab + za)%p;
 		}
@@ -57,7 +57,7 @@ unsigned int randXbitInt(unsigned int n) {
 //tests for primality and return 1 if N is probably prime and 0 if N is composite
 unsigned int isProbablyPrime(unsigned int N) {
 
-	if (N%2==2) {
+	if (N%2==0) {
 		return 0; //not interested in even numbers (including 2)
 	}
   unsigned int NsmallPrimes = 168;
@@ -105,11 +105,11 @@ unsigned int isProbablyPrime(unsigned int N) {
 		r++;
 	}
 
-	unsigned int a = (rand()%(N-3))+2;
+	for (unsigned int n=0; n < NsmallPrimes; n++) {
 
-	for (unsigned int n=0;n<NsmallPrimes;n++) {
-
-		unsigned int x = modExp(a, d, N);
+		unsigned int k = smallPrimeList[n];
+		unsigned int x = modExp(k, d, N);
+		
 		if (x == 1 || x == N-1) {
 			continue;
 		}
@@ -133,7 +133,7 @@ unsigned int findGenerator(unsigned int p) {
   /* Q3.3: complete this function and use the fact that p=2*q+1 to quickly find a generator */
 	unsigned int q = (p-1)/2;
 	int redFlag = 1;
-	unsigned int k, c, m, g;
+	unsigned int k, c, m, g = 0;
 	c = 2;
 
 	unsigned int b = (rand()%p);
@@ -143,8 +143,8 @@ unsigned int findGenerator(unsigned int p) {
 		k = pow(b, c);
 		m = pow(b, q);
 		if (k % p != 1 && m % p != 1) {
-			g = b;
 			redFlag = 0;
+			g = b;
 		}
 		b = (rand()%p);
 	}

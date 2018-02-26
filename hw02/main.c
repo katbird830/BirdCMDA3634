@@ -59,5 +59,12 @@ int main (int argc, char **argv) {
 	unsigned int g = findGenerator(p1);
 
 	printf("g = %u is a generator of Z_%u \n", g, p1);  
-  return 0;
+
+	/*Extra credit stuff*/
+	//unsigned int x = (rand()%p);
+	//unsigned int h = pow(g, x)%p;
+
+	
+
+	return 0;
 }
