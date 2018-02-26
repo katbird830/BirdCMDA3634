@@ -4,19 +4,18 @@
 
 #include "functions.h"
 
-int MASK = 0x80000000;
 
 //compute a*b mod p safely
-unsigned int modprod(unsigned int a, unsigned int b, unsigned int p) {
+unsigned int modProd(unsigned int a, unsigned int b, unsigned int p) {
   /* Q1.2: Complete this function */
-	unsigned int z = a;
+	unsigned int za = a;
 	unsigned int ab = 0;
 	int n = 32;
 	
-	for(i=0; i<n; i++) {
+	for(int i=0; i<n; i++) {
 
-		if((b & (MASK >> i)) > 0) {
-			ab = (ab + za)%p
+		if((b & (1 << i)) > 0) {
+			ab = (ab + za)%p;
 		}
 		za = (2*za)%p;
 	}
@@ -27,6 +26,18 @@ unsigned int modprod(unsigned int a, unsigned int b, unsigned int p) {
 //compute a^b mod p safely
 unsigned int modExp(unsigned int a, unsigned int b, unsigned int p) {
   /* Q1.3: Complete this function */
+	unsigned int z = a;
+	unsigned int aExpb = 1;
+	int n = 32;
+	
+	for(int i = 0; i<n; i++) {
+
+		if((b & (1 << i)) > 0) {
+			aExpb = modProd(aExpb, z, p);
+		}
+		z = modProd(z, z, p);
+	}
+	return aExpb;
 }
 
 //returns either 0 or 1 randomly
@@ -46,8 +57,9 @@ unsigned int randXbitInt(unsigned int n) {
 //tests for primality and return 1 if N is probably prime and 0 if N is composite
 unsigned int isProbablyPrime(unsigned int N) {
 
-  if (N%2==2) return 0; //not interested in even numbers (including 2)
-
+	if (N%2==2) {
+		return 0; //not interested in even numbers (including 2)
+	}
   unsigned int NsmallPrimes = 168;
   unsigned int smallPrimeList[168] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 
                                 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 
@@ -72,22 +84,64 @@ unsigned int isProbablyPrime(unsigned int N) {
                                 991, 997};
 
   //before using a probablistic primality check, check directly using the small primes list
-  for (unsigned int n=1;n<NsmallPrimes;n++) {
-    if (N==smallPrimeList[n])   return 1; //true
-    if (N%smallPrimeList[n]==0) return 0; //false
-  }
+	for (unsigned int n=1; n<NsmallPrimes; n++) {
+		if (N==smallPrimeList[n]) {  
+			return 1; //true
+		}
+    	if (N%smallPrimeList[n]==0) { 
+			return 0; //false
+		}
+	}
 
   //if we're testing a large number switch to Miller-Rabin primality test
   /* Q2.1: Complete this part of the isProbablyPrime function using the Miller-Rabin pseudo-code */
-  unsigned int r,d;
+	unsigned int d = 0;
+	unsigned int r = 1;
+	unsigned int q = N-1;
 
-  for (unsigned int n=0;n<NsmallPrimes;n++) {
-  
-  }
-  return 1; //true
+	while(d%2 == 0) {
+
+		d = q/pow(2, r);
+		r++;
+	}
+	
+	unsigned int a = (rand()%(N-3))+2;
+
+	 for (unsigned int n=0; n<NsmallPrimes; n++) {
+		unsigned int x = modExp(a, d, N);
+		if (x == 1 || x == N-1) {
+			continue;
+		}
+		for (unsigned int i = 0; i < r-1; i++) {
+
+			x = modProd(x, x, N);
+			if (x == 1) {
+				return 0;
+			}
+			if (x == N-1) {
+				continue;
+			}
+		}
+		return 0;
+	 }
+	return 1; //true
 }
 
 //Finds a generator of Z_p using the assumption that p=2*q+1
 unsigned int findGenerator(unsigned int p) {
   /* Q3.3: complete this function and use the fact that p=2*q+1 to quickly find a generator */
+	unsigned int q = (p-1)/2;
+	unsigned int k, c, m, g;
+	c = 2;
+
+	for (int i = 3; i < p; i++) {
+
+		k = pow(i, c);
+		m = pow(i, q);
+		if (k % p != 1 && m % p != 1) {
+			g = i;
+			break;
+		}
+	}
+	return g;
 }
