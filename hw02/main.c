@@ -36,7 +36,7 @@ int main (int argc, char **argv) {
   /* Q2.2: Use isProbablyPrime and randomXbitInt to find a random n-bit prime number */
 	
 	while (isProbablyPrime(p) == 0) {
-
+		//printf("p =  %u isn't prime.\n", p);
 		p = randXbitInt(n);
 	}
 	
@@ -47,18 +47,17 @@ int main (int argc, char **argv) {
 	unsigned int p1 = randXbitInt(n);
 	unsigned int q = (p1-1)/2;
 
-	while (isProbablyPrime(q) == 0 && isProbablyPrime(p1) == 0) {
+	while (isProbablyPrime(q) == 0 || isProbablyPrime(p1) == 0) {
 
 		p1 = randXbitInt(n);
 		q = (p1-1)/2;
 	}
 
-	printf("p = %u is probably prime and equals 2*q + 1. q= %u and is also probably prime.\n", p1, q);  
+	printf("p = %u is probably prime and equals 2*q + 1. q = %u and is also probably prime.\n", p1, q);  
 
 	/* Q3.3: use the fact that p=2*q+1 to quickly find a generator */
 	unsigned int g = findGenerator(p1);
 
 	printf("g = %u is a generator of Z_%u \n", g, p1);  
-
   return 0;
 }
