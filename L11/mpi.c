@@ -20,7 +20,9 @@ int main(int argc, char **argv) {
 	double seed = rank;
 	srand48(seed);
 
-	for (long long int n=0; n<1000000; n++) {
+	long long int Ntrials = 1000000000
+
+	for (long long int n=0; n<Ntrials; n++) {
 		//generate two random numbers
 		double rand1 = drand48(); //drand48 returns a number between 0 and 1
 		double rand2 = drand48();

@@ -68,13 +68,21 @@ int main (int argc, char **argv) {
 	
 	for (int i = 0; i < p; i++) {
 
+<<<<<<< HEAD
+		g1 = modProd(g,i, p);
+=======
 		g1 = (int)pow(g,i)%p;
+>>>>>>> 208ce1a6b066fc1cca971766b31d9c8a678b2f0b
 
 		if (h == g1) {
 			x1 = i;
 			break;
 		}
 	}
+<<<<<<< HEAD
+	//This seems to work although for the higher bit inputs x = 2 consistantly
+=======
+>>>>>>> 208ce1a6b066fc1cca971766b31d9c8a678b2f0b
 	printf("A possible secret key x for h = %u and g = %u is x = %u.\n", h, g, x1);
 
 	return 0;

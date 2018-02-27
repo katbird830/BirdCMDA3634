@@ -13,7 +13,7 @@ unsigned int modProd(unsigned int a, unsigned int b, unsigned int p) {
 	int n = 32;
 	
 	for(int i=0; i<n; i++) {
-		//got a tip 
+
 		if((b & (1 << i)) > 0) {
 			ab = (ab + za)%p;
 		}
@@ -42,16 +42,16 @@ unsigned int modExp(unsigned int a, unsigned int b, unsigned int p) {
 
 //returns either 0 or 1 randomly
 unsigned int randomBit() {
-  return rand()%2;
+	return rand()%2;
 }
 
 //returns a random integer which is between 2^{n-1} and 2^{n}
 unsigned int randXbitInt(unsigned int n) {
-  unsigned int r = 1;
-  for (unsigned int i=0; i<n-1; i++) {
-    r = r*2 + randomBit();
-  }
-  return r;
+	unsigned int r = 1;
+	for (unsigned int i=0; i<n-1; i++) {
+		r = r*2 + randomBit();
+  	}
+	return r;
 }
 
 //tests for primality and return 1 if N is probably prime and 0 if N is composite
@@ -60,8 +60,8 @@ unsigned int isProbablyPrime(unsigned int N) {
 	if (N%2==0) {
 		return 0; //not interested in even numbers (including 2)
 	}
-  unsigned int NsmallPrimes = 168;
-  unsigned int smallPrimeList[168] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 
+	unsigned int NsmallPrimes = 168;
+  	unsigned int smallPrimeList[168] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 
                                 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 
                                 79, 83, 89, 97, 101, 103, 107, 109, 113, 
                                 127, 131, 137, 139, 149, 151, 157, 163, 
@@ -140,8 +140,8 @@ unsigned int findGenerator(unsigned int p) {
 
 	while (redFlag == 1) {
 
-		k = pow(b, c);
-		m = pow(b, q);
+		k = modExp(b, c, p);
+		m = modExp(b, q, p);
 		if (k % p != 1 && m % p != 1) {
 			redFlag = 0;
 			g = b;
