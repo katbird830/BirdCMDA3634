@@ -62,22 +62,27 @@ int main (int argc, char **argv) {
 
 	/*Extra credit stuff*/
 	unsigned int x = (rand()%p);
-	unsigned int h = modExp(g, x, p);
+	unsigned int h = (int)pow(g, x)%p;
 
 	unsigned int x1, g1;
-
-	//has a lot of computation time when a number of bits input is < 21
-	//was faster when I used pow() function instead of modExp()
+	
 	for (int i = 0; i < p; i++) {
 
-		g1 = modExp(g, i, p);
+<<<<<<< HEAD
+		g1 = modProd(g,i, p);
+=======
+		g1 = (int)pow(g,i)%p;
+>>>>>>> 208ce1a6b066fc1cca971766b31d9c8a678b2f0b
 
 		if (h == g1) {
 			x1 = i;
 			break;
 		}
 	}
-	//This seems to work although for the higher bit inputs x = 2 consistant
+<<<<<<< HEAD
+	//This seems to work although for the higher bit inputs x = 2 consistantly
+=======
+>>>>>>> 208ce1a6b066fc1cca971766b31d9c8a678b2f0b
 	printf("A possible secret key x for h = %u and g = %u is x = %u.\n", h, g, x1);
 
 	return 0;
