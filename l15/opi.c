@@ -20,7 +20,8 @@ int main(int argc, char **argv) {
 	#pragma omp parallel
 	{
   		long int seed = omp_get_thread_num();
-  		srand48_r(seed, drandData+0);
+		int rank = omp_get_thread_num();
+  		srand48_r(seed, drandData+rank);
 	}
   	long long int Ntrials = 10000000;
 
@@ -28,14 +29,16 @@ int main(int argc, char **argv) {
 	//need running tallies
 	long long int Ntotal=0;
 	long long int Ncircle=0;
-	#pragma omp parallel for reduction(+:Ncircle)
+	double time = omp_get_wtime();
+	#pragma omp parallel for reduction(+:Ncircle) reduction(+:Ntotal)
 	for (long long int n=0; n<Ntrials; n++) {
     	double rand1;
     	double rand2;
+		int rank = omp_get_thread_num();
 
     	//generate two random numbers (use the thread id to offset drandData)
-		drand48_r(drandData+0, &rand1);
-    	drand48_r(drandData+0, &rand2);
+		drand48_r(drandData+rank, &rand1);
+    	drand48_r(drandData+rank, &rand2);
     
     	double x = -1 + 2*rand1; //shift to [-1,1]
     	double y = -1 + 2*rand2;
@@ -46,14 +49,14 @@ int main(int argc, char **argv) {
 
     	if (n%100 ==0) {
       		double pi = 4.0*Ncircle/ (double) (n);
-      		printf("Our estimate of pi is %g \n", pi);
+      		//printf("Our estimate of pi is %g \n", pi);
     	}
 	}
 
 	double pi = 4.0*Ncircle/ (double) (Ntotal);
-	double time = omp_get_wtime();
+	time = omp_get_wtime() - time;
 
-	printf("Our final estimate of pi is %g, it took %g seconds. \n", pi, time);
+	printf("Our final estimate of pi is %lf, it took %lf seconds. \n", pi, time);
 
 	free(drandData);
   
