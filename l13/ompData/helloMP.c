@@ -54,7 +54,7 @@ int main (int argc, char **argv) {
 
 	#pragma omp parallel
 	{
-		int rank = omp_get_thred_num();
+		int rank = omp_get_thread_num();
 		for (int n = 0; n<NumThreads; n++) {
 			if (rank == n) {
 				printf("val[%d] = %f \n", n, val[n]);
