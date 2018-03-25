@@ -21,8 +21,8 @@ int main (int argc, char **argv) {
   }
 
   //seed value for the randomizer 
-  double seed = clock()+rank; //this will make your program run differently everytime
-  //double seed = rank; //uncomment this and your program will behave the same everytime it's run
+  //double seed = clock()+rank; //this will make your program run differently everytime
+  double seed = rank; //uncomment this and your program will behave the same everytime it's run
 
   srand(seed);
   
@@ -31,11 +31,12 @@ int main (int argc, char **argv) {
 
 
   /* Q1.2 alter so only Alice performs the ElGamal setup */
-  printf("Enter a number of bits: "); fflush(stdout);
-  char status = scanf("%u",&n);
-	
-	
-
+	if (rank == 0) {
+		printf("Enter a number of bits: "); fflush(stdout);
+  		char status = scanf("%u",&n);
+		
+	}
+		
   //make sure the input makes sense
   if ((n<3)||(n>31)) {//Updated bounds. 2 is no good, 31 is actually ok
     printf("Unsupported bit size.\n");
@@ -52,7 +53,12 @@ int main (int argc, char **argv) {
 
 
   /* Q1.3 Share the public key information */
-  
+	MPI_Bcast(&p, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Bcast(&g, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Bcast(&h, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+	printf("Rank %d recieved the values p = %d, g = %d, and h = %d.\n", rank, p, g, h); 
+	
 
   //make an array of messages to send/recv
   unsigned int Nmessages = 5;
@@ -60,7 +66,7 @@ int main (int argc, char **argv) {
   //storage for messages
   unsigned int *message = 
       (unsigned int *) malloc(Nmessages*sizeof(unsigned int)); 
-  
+   
   //storage for extra encryption coefficient 
   unsigned int *a = 
       (unsigned int *) malloc(Nmessages*sizeof(unsigned int)); 
