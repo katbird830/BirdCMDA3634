@@ -147,7 +147,12 @@ void ElGamalEncrypt(unsigned int *m, unsigned int *a,
                     unsigned int p, unsigned int g, unsigned int h) {
 
   /* Q2.1 Implement the encryption routine for an ElGamal cryptographic system */
-	
+	unsigned int y = rand()%p;
+	*a = modExp(g, y, p);
+	unsigned int s = modExp(h, y, p);
+	*m = *m*s;
+
+	printf("Encryption produced the pair (%d, %d).\n", *a, *m);
 	
 }
 
@@ -155,4 +160,13 @@ void ElGamalDecrypt(unsigned int *m, unsigned int a,
                     unsigned int p, unsigned int x) {
 
   /* Q2.2 Implement the decryption routine for an ElGamal cryptographic system */
+
+	unsigned int s = modExp(a, x, p);
+	unsigned int q = p-2;
+	sHat = modExp(s, q, p);
+
+	mHat = *m*sHat;
+
+	fprint("The decrypted message is %d.\n", mHat);
+
 }
