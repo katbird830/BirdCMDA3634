@@ -41,12 +41,13 @@ int main (int argc, char **argv) {
 			return 0;   
 		}
 		printf("\n");
-
+	}
   
   //declare storage for an ElGamal cryptosytem
 		unsigned int p, g, h, x;
 
   //setup an ElGamal cryptosystem
+	if (rank == 0) {
 		setupElGamal(n,&p,&g,&h,&x);
 	}
 
@@ -85,9 +86,9 @@ int main (int argc, char **argv) {
 		}
   		printf("]\n");
 
-		int destRank = 0;
 		int tag = 1;
-		MPI_Send(message, 1, MPI_INT, destRank, tag, MPI_COMM_WORLD);
+		MPI_Send(message, Nmessages, MPI_INT, 0, tag, MPI_COMM_WORLD);
+		MPI_Send(a, Nmessages, MPI_INT, 0, tag, MPI_COMM_WORLD);
 	}
   /* Q2.3 Have only Bob populate messages and then
     send all the encrypted mesages to Alice (rank 0) */
@@ -100,9 +101,8 @@ int main (int argc, char **argv) {
 		MPI_Status status;
 		int tag = 1;
 
-		int sourceRank = 1;
-
-		MPI_Recv(message, MPI_INT, sourceRank, tag, MPI_COMM_WORLD, &status);
+		MPI_Recv(message, Nmessages, MPI_INT, 1, tag, MPI_COMM_WORLD, &status);
+		MPI_Recv(a, Nmessages, MPI_INT, 1, tag, MPI_COMM_WORLD, &status);
 
 		printf("Alice's recieved messages are:  [ ");
 		for (unsigned int i=0;i<Nmessages;i++) {

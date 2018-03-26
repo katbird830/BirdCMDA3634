@@ -135,7 +135,7 @@ void setupElGamal(unsigned int n, unsigned int *p, unsigned int *g,
 	//finding the generator of p
 	*g = findGenerator(*p);
 	//finding the random secret key
-	x* = randXbitInt(n)%p;
+	*x = randXbitInt(n)%*p;
 
 	*h = modExp(*g, *x, *p);
 	
@@ -151,12 +151,14 @@ void ElGamalEncrypt(unsigned int *m, unsigned int *a,
                     unsigned int p, unsigned int g, unsigned int h) {
 
   /* Q2.1 Implement the encryption routine for an ElGamal cryptographic system */
-	unsigned int y = randXbitInt(n)%p;
+	unsigned int y = randXbitInt(32)%p;
+	//printf("The randomly choosen y = %u.\n", y);
 	*a = modExp(g, y, p);
 	unsigned int s = modExp(h, y, p);
+	//printf("s = %u.\n", s);
 	*m = modprod(*m, s, p);
 
-	printf("Encryption produced the pair (%d, %d).\n", *a, *m);
+	//printf("Encryption produced the pair (%u, %u).\n", *a, *m);
 	
 }
 
@@ -170,8 +172,8 @@ void ElGamalDecrypt(unsigned int *m, unsigned int a,
 
 	unsigned int sHat = modExp(s, q, p);
 
-	unsigned int mHat = modprod(*m, sHat, p);
+	*m = modprod(*m, sHat, p);
 
-	printf("The decrypted message is %d.\n", mHat);
+	//printf("The decrypted message is %u.\n", *m);
 
 }
