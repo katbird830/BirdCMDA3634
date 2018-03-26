@@ -124,6 +124,18 @@ void setupElGamal(unsigned int n, unsigned int *p, unsigned int *g,
 
   /* Setup an ElGamal cryptographic system */
   
+	*p = randXbitInt(n);
+
+	while (isProbablyPrime(*p) == 0) {
+		*p = randXbitInt(n);
+	}
+
+	*g = findGenerator(*p);
+
+	x* = rand()%*p;
+
+	*h = modExp(g*, x*, *p);
+
   printf("ElGamal Setup successful.\n");
   printf("p = %u. \n", *p);  
   printf("g = %u is a generator of Z_%u \n", *g, *p);  
@@ -136,10 +148,26 @@ void ElGamalEncrypt(unsigned int *m, unsigned int *a,
                     unsigned int p, unsigned int g, unsigned int h) {
 
   /* implement the encryption routine for an ElGamal cryptographic system */
+
+	unsigned int y = rand()%p;
+	*a = modExp(g, y, p);
+	unsigned int s = modExp(h, y, p);
+	*m = modprod(*m, s, p);
+
+	printf("Encryption produced the pair (&d, %d).\n", *a, *m);
 }
 
 void ElGamalDecrypt(unsigned int *m, unsigned int a, 
                     unsigned int p, unsigned int x) {
 
   /* implement the decryption routine for an ElGamal cryptographic system */
+
+	unsigned int s = modExp(a, x, p);
+	unsigned int q = p-2;
+
+	unsigned int sHat = modExp(s, q, p);
+
+	unsigned int mHat = modprod(*m, sHat, p);
+
+	printf("The dycrpted message is %d.\n", mHat);
 }

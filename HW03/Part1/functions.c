@@ -125,14 +125,18 @@ void setupElGamal(unsigned int n, unsigned int *p, unsigned int *g,
   /* Q1.1 Setup an ElGamal cryptographic system */
 	//finding the prime number from number of bits given
 	*p = randXbitInt(n);
+	//Do I need to set this up so that q=(p-1)/2 is prime?
+	unsigned int q = (*p-1)/2;
 
-	while (isProbablyPrime(*p) == 0) {
+	while (!isProbablyPrime(*p) || !isProbablyPrime(q)) {
 		*p = randXbitInt(n);
+		q = (*p-1)/2;
 	}
 	//finding the generator of p
 	*g = findGenerator(*p);
 	//finding the random secret key
-	*x = rand()%*p
+	x* = randXbitInt(n)%p;
+
 	*h = modExp(*g, *x, *p);
 	
   printf("ElGamal Setup successful.\n");
@@ -147,10 +151,10 @@ void ElGamalEncrypt(unsigned int *m, unsigned int *a,
                     unsigned int p, unsigned int g, unsigned int h) {
 
   /* Q2.1 Implement the encryption routine for an ElGamal cryptographic system */
-	unsigned int y = rand()%p;
+	unsigned int y = randXbitInt(n)%p;
 	*a = modExp(g, y, p);
 	unsigned int s = modExp(h, y, p);
-	*m = *m*s;
+	*m = modprod(*m, s, p);
 
 	printf("Encryption produced the pair (%d, %d).\n", *a, *m);
 	
@@ -163,10 +167,11 @@ void ElGamalDecrypt(unsigned int *m, unsigned int a,
 
 	unsigned int s = modExp(a, x, p);
 	unsigned int q = p-2;
-	sHat = modExp(s, q, p);
 
-	mHat = *m*sHat;
+	unsigned int sHat = modExp(s, q, p);
 
-	fprint("The decrypted message is %d.\n", mHat);
+	unsigned int mHat = modprod(*m, sHat, p);
+
+	printf("The decrypted message is %d.\n", mHat);
 
 }

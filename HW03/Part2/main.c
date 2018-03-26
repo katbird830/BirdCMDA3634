@@ -25,22 +25,27 @@ int main (int argc, char **argv) {
 
   /* Q3.1 Make rank 0 setup the ELGamal system and
     broadcast the public key information */
-  printf("Enter a number of bits: "); fflush(stdout);
-  char status = scanf("%u",&n);
+	if (rank == 0) {
+		printf("Enter a number of bits: "); fflush(stdout);
+		char status = scanf("%u",&n);
+
 
   //make sure the input makes sense
-  if ((n<3)||(n>31)) {//Updated bounds. 2 is no good, 31 is actually ok
-    printf("Unsupported bit size.\n");
-    return 0;   
+		if ((n<3)||(n>31)) {//Updated bounds. 2 is no good, 31 is actually ok
+			printf("Unsupported bit size.\n");
+    		return 0;   
   }
-  printf("\n");
+		printf("\n");
 
   //declare storage for an ElGamal cryptosytem
-  unsigned int p, g, h, x;
+		unsigned int p, g, h, x;
 
   //setup an ElGamal cryptosystem
-  setupElGamal(n,&p,&g,&h,&x);
+		setupElGamal(n,&p,&g,&h,&x);
 
+		//MPI_Bcast
+
+	}
 
 
   //Suppose we don't know the secret key. Use all the ranks to try and find it in parallel
