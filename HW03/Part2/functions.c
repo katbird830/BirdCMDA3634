@@ -126,7 +126,7 @@ void setupElGamal(unsigned int n, unsigned int *p, unsigned int *g,
   
 	*p = randXbitInt(n);
 
-	unsigned in q = (*p-1)/2;
+	unsigned int q = (*p-1)/2;
 
 	while (!isProbablyPrime(*p) || !isProbablyPrime(q)) {
 		*p = randXbitInt(n);
@@ -135,9 +135,9 @@ void setupElGamal(unsigned int n, unsigned int *p, unsigned int *g,
 
 	*g = findGenerator(*p);
 
-	x* = randXbitInt(n)%*p;
+	*x = randXbitInt(n)%*p;
 
-	*h = modExp(g*, x*, *p);
+	*h = modExp(*g, *x, *p);
 
   printf("ElGamal Setup successful.\n");
   printf("p = %u. \n", *p);  

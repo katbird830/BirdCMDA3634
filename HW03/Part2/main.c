@@ -15,8 +15,8 @@ int main (int argc, char **argv) {
   MPI_Comm_size(MPI_COMM_WORLD,&size);
 
   //seed value for the randomizer 
-  double seed = clock()+rank; //this will make your program run differently everytime
-  //double seed = rank; //uncomment this and your program will behave the same everytime it's run
+  //double seed = clock()+rank; //this will make your program run differently everytime
+  double seed = rank; //uncomment this and your program will behave the same everytime it's run
 
   srand(seed);
 
@@ -34,18 +34,21 @@ int main (int argc, char **argv) {
 		if ((n<3)||(n>31)) {//Updated bounds. 2 is no good, 31 is actually ok
 			printf("Unsupported bit size.\n");
     		return 0;   
-  }
+		}
 		printf("\n");
+	}
 
   //declare storage for an ElGamal cryptosytem
 		unsigned int p, g, h, x;
 
   //setup an ElGamal cryptosystem
+	if (rank ==0) {
 		setupElGamal(n,&p,&g,&h,&x);
-
-		//MPI_Bcast
-
 	}
+	//MPI_Bcast
+	MPI_Bcast(&p, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Bcast(&g, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Bcast(&h, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
 
   //Suppose we don't know the secret key. Use all the ranks to try and find it in parallel
@@ -57,15 +60,26 @@ int main (int argc, char **argv) {
      distributed amounst the MPI ranks  */
   unsigned int N = p-1; //total loop size
   unsigned int start, end;
-  
-  start = 0; 
-  end = start + N;
+  unsigned int chunk = N/size;	
+	unsigned int rem = N%size;
+	if (rank > rem) {
+  		start = rank*chunk + rem; 
+  		end = start + chunk;
+	}
+	else {
+		start = rank*chunk + rank;
+		end = start + chunk + 1;
+	}
 
   //loop through the values from 'start' to 'end'
-  for (unsigned int i=start;i<end;i++) {
-    if (modExp(g,i+1,p)==h)
-      printf("Secret key found! x = %u \n", i);
-  }
+	double timeStart = MPI_Wtime();
+	
+	for (unsigned int i=start;i<end;i++) {
+    	if (modExp(g,i+1,p)==h)
+      		printf("Secret key found! x = %u \n", i+1);
+	}
+	double timeEnd = MPI_Wtime();
+	printf("The time elapsed was %f seconds.\n", timeEnd-timeStart);
 
   MPI_Finalize();
 
