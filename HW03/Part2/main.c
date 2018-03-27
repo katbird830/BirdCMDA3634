@@ -62,19 +62,19 @@ int main (int argc, char **argv) {
   unsigned int start, end;
   unsigned int chunk = N/size;	
 	unsigned int rem = N%size;
-	if (rank > rem) {
-  		start = rank*chunk + rem; 
-  		end = start + chunk;
+	if (rank < rem) {
+  		start = rank*chunk + rank; 
+  		end = start + chunk + 1;
 	}
 	else {
-		start = rank*chunk + rank;
-		end = start + chunk + 1;
+		start = rank*chunk + rem;
+		end = start + chunk;
 	}
 
   //loop through the values from 'start' to 'end'
 	double timeStart = MPI_Wtime();
 	unsigned int counter = 0;
-	unsigned int Ninterval = 10;
+	unsigned int Ninterval = 50;
 	unsigned int redFlag = 0;
 
 	for (unsigned int i=start;i<end;i++) {
@@ -85,7 +85,7 @@ int main (int argc, char **argv) {
 			redFlag = 1;
 		}
 		//attempting do extra credit portion
-		if (redFlag == 1) {
+		if (counter%Ninterval == 0 && redFlag == 1) {
 			break;
 		}
 	}
