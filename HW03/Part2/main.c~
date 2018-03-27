@@ -84,8 +84,7 @@ int main (int argc, char **argv) {
       		printf("Secret key found! x = %u \n", i+1);
 			redFlag = 1;
 		}
-		//attempting do extra credit portion
-		if (redFlag == 1) {
+		if (counter%Ninterval == 0 && redFlag == 1) {
 			break;
 		}
 	}
