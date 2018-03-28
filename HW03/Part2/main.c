@@ -21,14 +21,13 @@ int main (int argc, char **argv) {
   srand(seed);
 
   //begin with rank 0 getting user's input
-  unsigned int n;
+  unsigned int n = 16;
 
   /* Q3.1 Make rank 0 setup the ELGamal system and
     broadcast the public key information */
 	if (rank == 0) {
-		printf("Enter a number of bits: "); fflush(stdout);
-		char status = scanf("%u",&n);
-
+		//printf("Enter a number of bits: "); fflush(stdout);
+		//char status = scanf("%u",&n);
 
   //make sure the input makes sense
 		if ((n<3)||(n>31)) {//Updated bounds. 2 is no good, 31 is actually ok
@@ -62,13 +61,13 @@ int main (int argc, char **argv) {
   unsigned int start, end;
   unsigned int chunk = N/size;	
 	unsigned int rem = N%size;
-	if (rank > rem) {
-  		start = rank*chunk + rem; 
-  		end = start + chunk;
+	if (rank < rem) {
+  		start = rank*chunk + rank; 
+  		end = start + chunk + 1;
 	}
 	else {
-		start = rank*chunk + rank;
-		end = start + chunk + 1;
+		start = rank*chunk + rem;
+		end = start + chunk;
 	}
 
   //loop through the values from 'start' to 'end'
