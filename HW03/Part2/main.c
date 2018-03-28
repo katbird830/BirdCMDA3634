@@ -21,13 +21,13 @@ int main (int argc, char **argv) {
   srand(seed);
 
   //begin with rank 0 getting user's input
-  unsigned int n;
+  unsigned int n = 20;
 
   /* Q3.1 Make rank 0 setup the ELGamal system and
     broadcast the public key information */
 	if (rank == 0) {
-		printf("Enter a number of bits: "); fflush(stdout);
-		char status = scanf("%u",&n);
+		//printf("Enter a number of bits: "); fflush(stdout);
+		//char status = scanf("%u",&n);
 
   //make sure the input makes sense
 		if ((n<3)||(n>31)) {//Updated bounds. 2 is no good, 31 is actually ok
@@ -95,8 +95,8 @@ int main (int argc, char **argv) {
 	double timeSum;
 	unsigned int countSum;
 
-	MPI_AllReduce(&timeTotal, &timeSum, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-	MPI_AllReduce(&counter, &countSum, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+	MPI_Allreduce(&timeTotal, &timeSum, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+	MPI_Allreduce(&counter, &countSum, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 
 	double timeAvg = timeSum/(double)size;
 	unsigned int countAvg = countSum/size;
