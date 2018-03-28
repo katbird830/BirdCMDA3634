@@ -21,13 +21,13 @@ int main (int argc, char **argv) {
   srand(seed);
 
   //begin with rank 0 getting user's input
-  unsigned int n = 8;
+  unsigned int n;
 
   /* Q3.1 Make rank 0 setup the ELGamal system and
     broadcast the public key information */
 	if (rank == 0) {
-		//printf("Enter a number of bits: "); fflush(stdout);
-		//char status = scanf("%u",&n);
+		printf("Enter a number of bits: "); fflush(stdout);
+		char status = scanf("%u",&n);
 
   //make sure the input makes sense
 		if ((n<3)||(n>31)) {//Updated bounds. 2 is no good, 31 is actually ok
@@ -92,9 +92,20 @@ int main (int argc, char **argv) {
 	double timeEnd = MPI_Wtime();
 	double timeTotal = timeEnd-timeStart;
 
-	printf("The time elapsed was %f seconds.\n", timeTotal);
-	//printf("The program went through %u iterations.\n", counter);
-	printf("The throughput was %f iteration/time.\n", (double)counter/timeTotal);
+	double timeSum;
+	unsigned int countSum;
+
+	MPI_AllReduce(&timeTotal, &timeSum, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+	MPI_AllReduce(&counter, &countSum, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+
+	double timeAvg = timeSum/(double)size;
+	unsigned int countAvg = countSum/size;
+
+	if (rank == 0) {
+
+		printf("The average time elapsed was %f seconds.\n", timeAvg);
+		printf("The average throughput was %f iterations/second.\n", (double)countAvg/timeAvg);
+	}
 
 	MPI_Finalize();
 
