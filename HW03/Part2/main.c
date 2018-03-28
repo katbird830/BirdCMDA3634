@@ -94,8 +94,8 @@ int main (int argc, char **argv) {
 	double timeTotal = timeEnd-timeStart;
 
 	printf("The time elapsed was %f seconds.\n", timeTotal);
-	printf("The program went through %u iterations.\n", counter);
-	printf("The throughput was %f iteration/time.\n", (double)counter/timeTotal);
+	//printf("The program went through %u iterations.\n", counter);
+	printf("The throughput was %f time/iteration.\n", (double)counter/timeTotal);
 
 	MPI_Finalize();
 
