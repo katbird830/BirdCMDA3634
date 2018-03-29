@@ -84,9 +84,9 @@ int main (int argc, char **argv) {
 			redFlag = 1;
 		}
 		//attempting do extra credit portion
-		//if (counter%Ninterval == 0 && redFlag == 1) {
-		//	break;
-		//}
+		if (counter%Ninterval == 0 && redFlag == 1) {
+			break;
+		}
 	}
 
 	double timeEnd = MPI_Wtime();
