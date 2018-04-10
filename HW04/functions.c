@@ -152,7 +152,7 @@ void ElGamalEncrypt(unsigned int *m, unsigned int *a, unsigned int Nints,
                     unsigned int p, unsigned int g, unsigned int h) {
 
   /* Q2.1 Parallelize this function with OpenMP   */
-
+	#pragma omp parallel for
   for (unsigned int i=0; i<Nints;i++) {
     //pick y in Z_p randomly
     unsigned int y;
@@ -175,7 +175,7 @@ void ElGamalDecrypt(unsigned int *m, unsigned int *a, unsigned int Nints,
                     unsigned int p, unsigned int x) {
 
   /* Q2.1 Parallelize this function with OpenMP   */
-
+	#pragma omp parallel for
   for (unsigned int i=0; i<Nints;i++) {
     //compute s = a^x
     unsigned int s = modExp(a[i],x,p);
@@ -193,15 +193,37 @@ void ElGamalDecrypt(unsigned int *m, unsigned int *a, unsigned int Nints,
 void padString(unsigned char* string, unsigned int charsPerInt) {
 
   /* Q1.2 Complete this function   */
-
+	int length = strlen(string);
+	int remainder = length%charsPerInt;
+	if (remainder != 0) {
+		int padLen = charsPerInt - remainder;
+		char pad = ' ';
+		for (int i=0; i<padLen; i++) {
+			string[length+i] = pad;
+		}
+		string[length+padLen+1] = '\0';
+	}
 }
 
 
 void convertStringToZ(unsigned char *string, unsigned int Nchars,
                       unsigned int  *Z,      unsigned int Nints) {
-
+	//printf("Nints/Nchars: %u.\n", (Nints/Nchars));
   /* Q1.3 Complete this function   */
   /* Q2.2 Parallelize this function with OpenMP   */
+	#pragma omp parallel for
+	for (int i=0; i<Nints; i += (Nchars/Nints)) {
+		if ((Nchars/Nints) == 1) {
+			unsigned int a = (unsigned int) string[i];
+			Z[i] = a;
+		}
+		if ((Nchars/Nints) == 2) {
+			Z[i] = ((unsigned int) string[i] >> 8) + ((unsigned int) string[i+1]);
+		}
+		else {
+			Z[i] = ((unsigned int) string[i] >>16) + ((unsigned int) string[i+1]>>8)+((unsigned int) string[i+2]);
+		}
+	}
 
 }
 
@@ -211,6 +233,29 @@ void convertZToString(unsigned int  *Z,      unsigned int Nints,
 
   /* Q1.4 Complete this function   */
   /* Q2.2 Parallelize this function with OpenMP   */
+	#pragma omp parallel for
+	for (int i=0; i<Nints; i++) {
+		if (Nchars/Nints == 1) {
+			unsigned char a = (unsigned char) Z[i];
+			string[i] = a;
+		}
+		if (Nchars/Nints == 2) {
+			unsigned int b = Z[i]%256;
+			unsigned char a = (unsigned char) (Z[i]-b)/256;
+			unsigned char bLetter = (unsigned char)b;
 
+			string[i] = a;
+			string[2*i+1] = bLetter;
+		}
+		else {
+			unsigned int c = Z[i]%256;
+			unsigned int b = (Z[i]-c)/256;
+			unsigned int a = (Z[i]-b)/65536;
+
+			string[i] = (unsigned char)a;
+			string[3*i+1] = (unsigned char)b;
+			string[3*i+2] = (unsigned char)c;
+		}
+	}
 }
 
