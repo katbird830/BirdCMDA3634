@@ -42,11 +42,13 @@ int main (int argc, char **argv) {
   unsigned char *message = (unsigned char *) malloc(bufferSize*sizeof(unsigned char));
 
   //populate the string with a message
-  strcpy(message, "Hello, this is the message as a string.");
+  //strcpy(message, "Hello, this is the message as a string.");
+	strcpy(message, "aaaaa");
   printf("Message = \"%s\"\n", message);
 
   /* Q1.1 Finish this line   */
   unsigned int charsPerInt = (n-1)/8;
+	printf("charsPerInt = %u\n", charsPerInt);
 
   padString(message, charsPerInt);
   printf("Padded Message = \"%s\"\n", message);

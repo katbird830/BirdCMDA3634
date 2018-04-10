@@ -216,12 +216,15 @@ void convertStringToZ(unsigned char *string, unsigned int Nchars,
 		if ((Nchars/Nints) == 1) {
 			unsigned int a = (unsigned int) string[i];
 			Z[i] = a;
+			printf("entry in Z[]: %u \n", Z[i]);
 		}
 		if ((Nchars/Nints) == 2) {
-			Z[i] = ((unsigned int) string[i] >> 8) + ((unsigned int) string[i+1]);
+			Z[i] = ((unsigned int) string[i] << 8) + ((unsigned int) string[i+1]);
+			printf("entry in Z: %u \n", Z[i]);
 		}
 		else {
-			Z[i] = ((unsigned int) string[i] >>16) + ((unsigned int) string[i+1]>>8)+((unsigned int) string[i+2]);
+			Z[i] = ((unsigned int) string[i] << 16) + ((unsigned int) string[i+1]<< 8)+((unsigned int) string[i+2]);
+			printf("entry in Z: %u \n", Z[i]);
 		}
 	}
 
@@ -238,19 +241,21 @@ void convertZToString(unsigned int  *Z,      unsigned int Nints,
 		if (Nchars/Nints == 1) {
 			unsigned char a = (unsigned char) Z[i];
 			string[i] = a;
+			printf("a is %c \n", a);
+			printf("string is: %c \n", string[i]);
 		}
 		if (Nchars/Nints == 2) {
 			unsigned int b = Z[i]%256;
-			unsigned char a = (unsigned char) (Z[i]-b)/256;
-			unsigned char bLetter = (unsigned char)b;
+			unsigned char a = ((unsigned char) (Z[i]-b)>>8);
+			unsigned char bLetter = (unsigned char) b;
 
 			string[i] = a;
 			string[2*i+1] = bLetter;
 		}
 		else {
 			unsigned int c = Z[i]%256;
-			unsigned int b = (Z[i]-c)/256;
-			unsigned int a = (Z[i]-b)/65536;
+			unsigned int b = ((Z[i]-c)>>8);
+			unsigned int a = ((Z[i]-b)>>16);
 
 			string[i] = (unsigned char)a;
 			string[3*i+1] = (unsigned char)b;
