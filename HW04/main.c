@@ -42,8 +42,9 @@ int main (int argc, char **argv) {
   unsigned char *message = (unsigned char *) malloc(bufferSize*sizeof(unsigned char));
 
   //populate the string with a message
-  //strcpy(message, "Hello, this is the message as a string.");
-	strcpy(message, "aaaa");
+  strcpy(message, "Hello, this is the message as a string.");
+	//test string
+	//strcpy(message, "aaaa");
   printf("Message = \"%s\"\n", message);
 
   /* Q1.1 Finish this line   */
@@ -90,9 +91,11 @@ int main (int argc, char **argv) {
 
   /* Q2.3 Parallelize this loop with OpenMP   */
   double startTime = omp_get_wtime();
+	//flag for when secret key is found
 	int redFlag = 1;
 	#pragma omp parallel for shared(redFlag)
   for (unsigned int i=0;i<p-1;i++) {
+	//looks for flag to still be true breaks if false
 	if (redFlag) {
 		continue;
 	}

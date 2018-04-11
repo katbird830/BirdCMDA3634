@@ -194,13 +194,18 @@ void padString(unsigned char* string, unsigned int charsPerInt) {
 
   /* Q1.2 Complete this function   */
 	int length = strlen(string);
+	//how many extra char the string has
 	int remainder = length%charsPerInt;
+	//checks if already a  good length
 	if (remainder != 0) {
+		//length of pad to get to len%charPerInt = 0
 		int padLen = charsPerInt - remainder;
 		char pad = ' ';
+		//loops through to add the appropriately long padding
 		for (int i=0; i<padLen; i++) {
 			string[length+i] = pad;
 		}
+		//adds the replaced termination character
 		string[length+padLen+1] = '\0';
 	}
 }
@@ -211,8 +216,8 @@ void convertStringToZ(unsigned char *string, unsigned int Nchars,
 	//printf("Nints/Nchars: %u.\n", (Nints/Nchars));
   /* Q1.3 Complete this function   */
   /* Q2.2 Parallelize this function with OpenMP   */
-	int chars = (Nchars/Nints);
-	printf("chars is %d\n", chars);
+	//for testing
+	//printf("chars is %d\n", chars);
 	#pragma omp parallel for
 	for (int i=0; i<=Nints; i++) {
 		if ((Nchars/Nints) == 1) {
@@ -221,22 +226,28 @@ void convertStringToZ(unsigned char *string, unsigned int Nchars,
 			//sets ith entry to casted char
 			Z[i] = a;
 			//troubleshooting
-			printf("entry in Z[]: %u \n", Z[i]);
-			printf("(Nchars/Nints) is %u \n", (Nchars/Nints));
+			//printf("entry in Z[]: %u \n", Z[i]);
+			//printf("(Nchars/Nints) is %u \n", (Nchars/Nints));
 		}
 		else if ((Nchars/Nints) == 2) {
-			//grabs first two characters of string and shifts the first
+			//grabs first two characters of string
 			unsigned int a = (unsigned int) string[2*i];
 			unsigned int b = (unsigned int) string[2*i+1];
-			printf("i: %d\n", i);
-			printf("Nints: %d\n", Nints);
+			//debugging
+			//printf("i: %d\n", i);
+			//printf("Nints: %d\n", Nints);
+
+			//shifts the first int and adds the second for entry
 			Z[i] = (a*256) + b;
-			printf("entry in Z: %u \n", Z[i]);
-			printf("(Nchars/Nints) is %u \n", (Nchars/Nints));
+			//debugging
+			//printf("entry in Z: %u \n", Z[i]);
+			//printf("(Nchars/Nints) is %u \n", (Nchars/Nints));
 		}
 		else {
+			//since only one other case	
+			//grabs first three char, shifts appropriately and adds for enrtry in Z[i]
 			Z[i] = ((unsigned int) string[3*i] << 16) + ((unsigned int) string[3*i+1]*256)+((unsigned int) string[3*i+2]);
-			printf("entry in Z: %u \n", Z[i]);
+			//printf("entry in Z: %u \n", Z[i]);
 		}
 	}
 
@@ -251,10 +262,11 @@ void convertZToString(unsigned int  *Z,      unsigned int Nints,
 	#pragma omp parallel for
 	for (int i=0; i<Nints; i++) {
 		if (Nchars/Nints == 1) {
+			//grabs last character
 			unsigned char a = (unsigned char) Z[i]%256;
 			string[i] = a;
-			printf("a is %c \n", a);
-			printf("string is: %c \n", string[i]);
+			//printf("a is %c \n", a);
+			//printf("string is: %c \n", string[i]);
 		}
 		else if (Nchars/Nints == 2) {
 			//take mode to grab last character added
@@ -265,14 +277,16 @@ void convertZToString(unsigned int  *Z,      unsigned int Nints,
 
 			string[2*i] = a;
 			string[2*i+1] = bLetter;
-			printf("Z[%d]: %d\n", i, Z[i]);
-			printf("a:%d, b:%d, string[%d] is: %d \n", a, bLetter, i, string[i]);
+			//printf("Z[%d]: %d\n", i, Z[i]);
+			//printf("a:%d, b:%d, string[%d] is: %d \n", a, bLetter, i, string[i]);
 		}
 		else {
+			//grabs last character
 			unsigned int c = Z[i]%256;
+			//shifts, subtracts prev char and grabs the last one with %256
 			unsigned int b = ((Z[i]-c)/256)%256;
 			unsigned int a = ((Z[i]-b-c)>>16);
-
+			//filling string
 			string[3*i] = (unsigned char)a;
 			string[3*i+1] = (unsigned char)b;
 			string[3*i+2] = (unsigned char)c;
