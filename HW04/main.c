@@ -43,7 +43,7 @@ int main (int argc, char **argv) {
 
   //populate the string with a message
   //strcpy(message, "Hello, this is the message as a string.");
-	strcpy(message, "aaaaa");
+	strcpy(message, "aaaa");
   printf("Message = \"%s\"\n", message);
 
   /* Q1.1 Finish this line   */
@@ -90,10 +90,15 @@ int main (int argc, char **argv) {
 
   /* Q2.3 Parallelize this loop with OpenMP   */
   double startTime = omp_get_wtime();
-	#pragma omp parallel for 
+	int redFlag = 1;
+	#pragma omp parallel for shared(redFlag)
   for (unsigned int i=0;i<p-1;i++) {
+	if (redFlag) {
+		continue;
+	}
     if (modExp(g,i+1,p)==h) {
       printf("Secret key found! x = %u \n", i);
+		redFlag = 0;
     } 
   }
   double endTime = omp_get_wtime();

@@ -211,19 +211,31 @@ void convertStringToZ(unsigned char *string, unsigned int Nchars,
 	//printf("Nints/Nchars: %u.\n", (Nints/Nchars));
   /* Q1.3 Complete this function   */
   /* Q2.2 Parallelize this function with OpenMP   */
+	int chars = (Nchars/Nints);
+	printf("chars is %d\n", chars);
 	#pragma omp parallel for
-	for (int i=0; i<Nints; i += (Nchars/Nints)) {
+	for (int i=0; i<=Nints; i++) {
 		if ((Nchars/Nints) == 1) {
+			//grabs each character of string and casts to int
 			unsigned int a = (unsigned int) string[i];
+			//sets ith entry to casted char
 			Z[i] = a;
+			//troubleshooting
 			printf("entry in Z[]: %u \n", Z[i]);
+			printf("(Nchars/Nints) is %u \n", (Nchars/Nints));
 		}
-		if ((Nchars/Nints) == 2) {
-			Z[i] = ((unsigned int) string[i] << 8) + ((unsigned int) string[i+1]);
+		else if ((Nchars/Nints) == 2) {
+			//grabs first two characters of string and shifts the first
+			unsigned int a = (unsigned int) string[2*i];
+			unsigned int b = (unsigned int) string[2*i+1];
+			printf("i: %d\n", i);
+			printf("Nints: %d\n", Nints);
+			Z[i] = (a*256) + b;
 			printf("entry in Z: %u \n", Z[i]);
+			printf("(Nchars/Nints) is %u \n", (Nchars/Nints));
 		}
 		else {
-			Z[i] = ((unsigned int) string[i] << 16) + ((unsigned int) string[i+1]<< 8)+((unsigned int) string[i+2]);
+			Z[i] = ((unsigned int) string[3*i] << 16) + ((unsigned int) string[3*i+1]*256)+((unsigned int) string[3*i+2]);
 			printf("entry in Z: %u \n", Z[i]);
 		}
 	}
@@ -239,25 +251,29 @@ void convertZToString(unsigned int  *Z,      unsigned int Nints,
 	#pragma omp parallel for
 	for (int i=0; i<Nints; i++) {
 		if (Nchars/Nints == 1) {
-			unsigned char a = (unsigned char) Z[i];
+			unsigned char a = (unsigned char) Z[i]%256;
 			string[i] = a;
 			printf("a is %c \n", a);
 			printf("string is: %c \n", string[i]);
 		}
-		if (Nchars/Nints == 2) {
+		else if (Nchars/Nints == 2) {
+			//take mode to grab last character added
 			unsigned int b = Z[i]%256;
-			unsigned char a = ((unsigned char) (Z[i]-b)>>8);
+			//cast and shift right
+			unsigned char a = (unsigned char) ((Z[i]-b)/256);
 			unsigned char bLetter = (unsigned char) b;
 
-			string[i] = a;
+			string[2*i] = a;
 			string[2*i+1] = bLetter;
+			printf("Z[%d]: %d\n", i, Z[i]);
+			printf("a:%d, b:%d, string[%d] is: %d \n", a, bLetter, i, string[i]);
 		}
 		else {
 			unsigned int c = Z[i]%256;
-			unsigned int b = ((Z[i]-c)>>8);
-			unsigned int a = ((Z[i]-b)>>16);
+			unsigned int b = ((Z[i]-c)/256)%256;
+			unsigned int a = ((Z[i]-b-c)>>16);
 
-			string[i] = (unsigned char)a;
+			string[3*i] = (unsigned char)a;
 			string[3*i+1] = (unsigned char)b;
 			string[3*i+2] = (unsigned char)c;
 		}
