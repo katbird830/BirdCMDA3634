@@ -40,7 +40,7 @@ int main (int argc, char **argv) {
 	FILE *f;
 	f = fopen("public_key.txt", "w");
 
-	printf("%u \n %u\n %u\n %u\n", n, p, g, h);
+	fprintf("%u\n %u\n %u\n %u\n", n, &p, &g, &h);
 	fclose(f);
 
   return 0;
