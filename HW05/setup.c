@@ -39,8 +39,7 @@ int main (int argc, char **argv) {
   /* Q1 Complete this function and write the public key data to the file public_key.txt */
 	FILE *f;
 	f = fopen("public_key.txt", "w");
-
-	fprintf("%u\n %u\n %u\n %u\n", n, &p, &g, &h);
+	fprintf(f, "%u\n%u\n%u\n%u\n", n, p, g, h);
 	fclose(f);
 
   return 0;

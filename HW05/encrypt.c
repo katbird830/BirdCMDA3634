@@ -29,6 +29,13 @@ int main (int argc, char **argv) {
     convert the string to elements of Z_p, encrypt them, and write the cyphertexts to 
     message.txt */
 
+	FILE *fr;
+	fopen("public_key.txt", "r");
+	fscanf(fr, "%u%u%u%u", &n, &p, &g, &h);
+	fclose(fr);
+
+	
+
   
   return 0;
 }
