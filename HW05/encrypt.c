@@ -34,14 +34,19 @@ int main (int argc, char **argv) {
 	fscanf(fr, "%u\n%u\n%u\n%u", &n, &p, &g, &h);
 	fclose(fr);
 
-	//printf("n= %u\n", n);
-	//printf("p= %u\n", p);
-	//printf("g= %u\n", g);
-	//printf("h= %u\n", h);
+	printf("n= %u\n", n);
+	printf("p= %u\n", p);
+	printf("g= %u\n", g);
+	printf("h= %u\n", h);
 
 	unsigned int charsPerInt = (n-1)/8;
+
+	padString(message, charsPerInt);
+
 	unsigned int Nints = strlen(message)/charsPerInt;
+	
 	unsigned int Nchars = strlen(message);
+	
 	unsigned int *a = (unsigned int *) malloc(Nints*sizeof(unsigned int));
 	unsigned int *Zmess = (unsigned int *) malloc(Nints*sizeof(unsigned int));
 
