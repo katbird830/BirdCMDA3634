@@ -21,10 +21,12 @@ __device__ unsigned int dProdMod(unsigned int a, unsigned int b, unsigned int p)
 
 __device__ unsigned int dExpMod(unsigned int a, unsigned int b, unsigned int p) {
 	unsigned int z = a;
-	unsigned in aExpb = 1;
+	unsigned int aExpb = 1;
 
 	while (b>0) {
-		if (b%2 == 1) aExpb = dProdMod(aExpb, z, p);
+		if (b%2 == 1) {
+			aExpb = dProdMod(aExpb, z, p);
+		}
 		z = dProdMod(z, z, p);
 		b /= 2;
 	}
@@ -33,14 +35,14 @@ __device__ unsigned int dExpMod(unsigned int a, unsigned int b, unsigned int p) 
 
 __global__ void kernalFindKey(unsigned int p, unsigned int g, unsigned int h, unsigned int *x) {
 
-	unsigned int threadid = (unsigned int) threadIdx.x
+	unsigned int threadid = (unsigned int) threadIdx.x;
 	unsigned int blockid = (unsigned int) blockIdx.x;
 	unsigned int Nblock = (unsigned int) blockDim.x;
 
 	unsigned int id = threadid + blockid*Nblock + 1;
 
 	if (dExpMod(g, id, p) == h) {
-		&x = id;
+		*x = id;
 	}
 }
 
@@ -87,6 +89,7 @@ int main (int argc, char **argv) {
 	int Nthreads = 32;
 	int Nblocks = (p+Nthreads-1)/Nthreads;
 	
+	double startTime = clock();
   // find the secret key
 	if (x==0 || modExp(g,x,p)!=h) {
     	printf("Finding the secret key...\n");
@@ -100,9 +103,8 @@ int main (int argc, char **argv) {
     double throughput = work/totalTime;
 
     printf("Searching all keys took %g seconds, throughput was %g values tested per second.\n", totalTime, throughput);
-  }
-
-	cudaMemcpy(x,d_x,1*sizeof(unsigned int), cudaMemcpyDeviceToHost);
+  
+	cudaMemcpy(&x, d_x,1*sizeof(unsigned int), cudaMemcpyDeviceToHost);
 
 	unsigned int charsPerInt = (n-1)/8;
 	unsigned int Nchars = Nints*charsPerInt;
