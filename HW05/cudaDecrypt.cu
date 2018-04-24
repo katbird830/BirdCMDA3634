@@ -63,12 +63,12 @@ int main (int argc, char **argv) {
   /* Q3 Complete this function. Read in the public key data from public_key.txt
     and the cyphertexts from messages.txt. */
 	FILE *f;
-	f = fopen("public_key.txt", "r");
+	f = fopen("bonus_public_key.txt", "r");
 	fscanf(f, "%u\n%u\n%u\n%u", &n, &p, &g, &h);
 	fclose(f);
 
 	FILE *fr;
-	fr = fopen("message.txt", "r");
+	fr = fopen("bonus_message.txt", "r");
 	fscanf(fr, "%u\n", &Nints);
 
 	//allocating memory for the (m, a)
