@@ -63,12 +63,14 @@ int main (int argc, char **argv) {
   /* Q3 Complete this function. Read in the public key data from public_key.txt
     and the cyphertexts from messages.txt. */
 	FILE *f;
-	f = fopen("bonus_public_key.txt", "r");
+	//f = fopen("bonus_public_key.txt", "r");
+	f = fopen("public_key.txt","r");
 	fscanf(f, "%u\n%u\n%u\n%u", &n, &p, &g, &h);
 	fclose(f);
 
 	FILE *fr;
-	fr = fopen("bonus_message.txt", "r");
+	//fr = fopen("bonus_message.txt", "r");
+	fr = fopen("message.txt", "r");
 	fscanf(fr, "%u\n", &Nints);
 
 	//allocating memory for the (m, a)
@@ -95,14 +97,16 @@ int main (int argc, char **argv) {
     	printf("Finding the secret key...\n");
     	double startTime = clock();
     	kernalFindKey <<<Nblocks ,Nthreads >>>(p, g, h, d_x);
+		cudaDeviceSynchronize();
 	}
+	
     double endTime = clock();
 
-    double totalTime = (endTime-startTime)/CLOCKS_PER_SEC;
+    double totalTime = 1000*(endTime-startTime)/CLOCKS_PER_SEC;
     double work = (double) p;
     double throughput = work/totalTime;
 
-    printf("Searching all keys took %g seconds, throughput was %g values tested per second.\n", totalTime, throughput);
+    printf("Searching all keys took %g miliseconds, throughput was %g values tested per second.\n", totalTime, throughput);
   
 	cudaMemcpy(&x, d_x,1*sizeof(unsigned int), cudaMemcpyDeviceToHost);
 
