@@ -60,7 +60,7 @@ int main (int argc, char **argv) {
 	f = fopen("message.txt", "w");
 	fprintf(f, "%u\n", Nints);
 	for (unsigned int i = 0; i<Nints; i++) {
-		fprintf(f, "(%u,%u)\n", Zmess[i], a[i]);
+		fprintf(f, "%u %u\n", Zmess[i], a[i]);
 	}
 	fclose(f);
 	

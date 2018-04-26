@@ -36,7 +36,7 @@ int main (int argc, char **argv) {
 
 	//filling b and Zmessage from txt file
 	for (unsigned int i = 0; i<Nints; i++) {
-		fscanf(fr, "(%u,%u)\n", &Zmessage[i], &b[i]);
+		fscanf(fr, "%u %u\n", &Zmessage[i], &b[i]);
 	}
 	fclose(fr);
 	
